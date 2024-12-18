@@ -12,7 +12,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Curl Google
+      - name: Send PR Information to Backend
         run: |
-          echo "Triggering a curl request to Google..."
-          curl -I https://www.google.com
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO_NAME=${{ github.repository }}
+          API_URL="https://your-backend-endpoint.com/pr-data"
+          
+          echo "Sending PR number and repository name to backend..."
+          curl -X POST $API_URL \
+          -H "Content-Type: application/json" \
+          -d '{
+            "pr_number": "'$PR_NUMBER'",
+            "repo_name": "'$REPO_NAME'"
+          }'
